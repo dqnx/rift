@@ -6,7 +6,7 @@ import (
 
 // Need to wrap in mainthread...
 func main() {
-	const framerate = 60 * time.Millisecond
+	const frameRate = 60 * time.Millisecond
 	
 	// Handle Input
 	// Waits for input (key press)
@@ -19,7 +19,7 @@ func main() {
 	*/
 	
 	// Rendering loop
-	tick := time.Tick(*frameRate)
+	tick := time.Tick(frameRate)
 	for { // window not closed
 		<-tick
 		// Clear
