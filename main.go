@@ -18,7 +18,7 @@ func main() {
 	running := true
 
 	var scenes SceneManager
-	scenes.Init(TitleScene{})
+	scenes.Init(&TitleScene{})
 
 	// Handle Input
 	// Waits for input (key press)

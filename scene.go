@@ -18,7 +18,7 @@ const (
 	Stay Transition = iota
 	// Next removes curent scene and goes to the top scene, if it exists.
 	Next
-	// Append adds a scene at the end.
+	// Append adds a scene at the end and pops the current scene.
 	Append
 	// Insert a scene at the beginning and switch to it.
 	Insert
@@ -58,6 +58,7 @@ func (m *SceneManager) HandleKeyEvent(k gorl.Key) {
 		}
 	case Append:
 		m.scenes = append(m.scenes, s)
+		_, m.scenes = m.scenes[0], m.scenes[1:]
 	case Insert:
 		insert := []Scene{s}
 		m.scenes = append(insert, m.scenes...)
