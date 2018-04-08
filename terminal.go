@@ -8,3 +8,9 @@ func TermDrawText(x int, y int, s string) {
 		gorl.TermDraw(x+i, y, gorl.Char(rune(r)))
 	}
 }
+
+func TermDrawTileGrid(x int, y int, tileGrid []*gorl.Tile) {
+	for _, t := range tileGrid {
+		gorl.TermDraw(x+t.Offset.X, y+t.Offset.Y, t.Face)
+	}
+}

@@ -6,6 +6,8 @@ type CharacterScene struct {
 	selected int
 }
 
+func (s *CharacterScene) Init() {}
+
 func (s *CharacterScene) HandleInput(k gorl.Key) (Transition, Scene) {
 	switch k {
 	case gorl.KeyEsc:
@@ -21,7 +23,7 @@ func (s *CharacterScene) HandleInput(k gorl.Key) (Transition, Scene) {
 	case gorl.KeyEnter:
 		switch s.selected {
 		case 0: // create
-			return Next, nil
+			return Append, &DungeonScene{}
 		case 1: // back
 			return Append, &TitleScene{}
 		}

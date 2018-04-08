@@ -10,6 +10,7 @@ import (
 
 // Need to wrap in mainthread...
 func main() {
+
 	// Frametime in microseconds
 	const frameRate = 1000000 / 60
 

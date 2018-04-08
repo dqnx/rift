@@ -6,6 +6,7 @@ import (
 
 // Scene represents a state of the game. Each scene has its own logic and rendering.
 type Scene interface {
+	Init()
 	HandleInput(gorl.Key) (Transition, Scene)
 	Render()
 }
@@ -32,6 +33,7 @@ type SceneManager struct {
 // Init adds a scene to initialize the scene list.
 func (m *SceneManager) Init(s Scene) {
 	m.scenes = append(m.scenes, s)
+	m.scenes[0].Init()
 }
 
 // Empty returns if the scene list is empty.
@@ -52,6 +54,7 @@ func (m *SceneManager) HandleKeyEvent(k gorl.Key) {
 	case Next:
 		if len(m.scenes) > 1 {
 			_, m.scenes = m.scenes[0], m.scenes[1:]
+			m.scenes[0].Init()
 		} else {
 			// Removing one element makes it empty anyways.
 			m.scenes = nil
@@ -59,9 +62,11 @@ func (m *SceneManager) HandleKeyEvent(k gorl.Key) {
 	case Append:
 		m.scenes = append(m.scenes, s)
 		_, m.scenes = m.scenes[0], m.scenes[1:]
+		m.scenes[0].Init()
 	case Insert:
 		insert := []Scene{s}
 		m.scenes = append(insert, m.scenes...)
+		m.scenes[0].Init()
 	}
 
 }

@@ -7,6 +7,8 @@ type TitleScene struct {
 	selected int
 }
 
+func (s *TitleScene) Init() {}
+
 // HandleInput selects the different menu options.
 func (s *TitleScene) HandleInput(k gorl.Key) (Transition, Scene) {
 	switch k {
