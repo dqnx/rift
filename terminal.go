@@ -11,6 +11,8 @@ func TermDrawText(x int, y int, s string) {
 
 func TermDrawTileGrid(x int, y int, tileGrid []*gorl.Tile) {
 	for _, t := range tileGrid {
-		gorl.TermDraw(x+t.Offset.X, y+t.Offset.Y, t.Face)
+		if t.Lite {
+			gorl.TermDraw(x+t.Offset.X, y+t.Offset.Y, t.Face)
+		}
 	}
 }

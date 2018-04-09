@@ -15,6 +15,7 @@ func (s *DungeonScene) Init() {
 
 	s.tileGrid = GenerateDungeon(30, 20)
 }
+
 func (s *DungeonScene) HandleInput(k gorl.Key) (Transition, Scene) {
 	switch k {
 	case gorl.KeyEsc:

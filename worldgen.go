@@ -34,14 +34,18 @@ func NewMapTmpl(x, y int) MapTmpl {
 	t := make([][]TileTmpl, x)
 	for i := 0; i < x; i++ {
 		t[i] = make([]TileTmpl, y)
+		for j := 0; j < y; j++ {
+			t[i][j].Pass = false
+			t[i][j].Lite = false
+		}
 	}
 
 	return MapTmpl{Tiles: t}
 }
 
 func (m *MapTmpl) createRoom(r Rect) {
-	for x := r.X1; x <= r.X2; x++ {
-		for y := r.Y1; y <= r.Y2; y++ {
+	for x := r.X1 + 1; x <= r.X2; x++ {
+		for y := r.Y1 + 1; y <= r.Y2; y++ {
 			m.Tiles[x][y].Pass = true
 			m.Tiles[x][y].Lite = true
 		}
@@ -51,7 +55,8 @@ func (m *MapTmpl) createRoom(r Rect) {
 // GenerateDungeon creates a classic dungeon layout of rooms and hallways.
 func GenerateDungeon(cols, rows int) []*gorl.Tile {
 	dungeon := NewMapTmpl(cols, rows)
-	dungeon.createRoom(Rect{2, 2, 8, 5})
+	dungeon.createRoom(NewRect(2, 2, 5, 5))
+	dungeon.createRoom(NewRect(10, 2, 4, 5))
 
 	var tileMapper = func(o gorl.Offset) *gorl.Tile {
 		tile := gorl.NewTile(o)
