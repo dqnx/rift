@@ -1,6 +1,15 @@
 package main
 
-import "gitlab.com/rauko1753/gorl"
+import (
+	//"fmt"
+	"gitlab.com/rauko1753/gorl"
+)
+
+const (
+	roomMaxSize = 11
+	roomMinSize = 4
+	maxRooms    = 16
+)
 
 // TileTmpl is a template tile used for map generation.
 type TileTmpl struct {
@@ -17,6 +26,18 @@ type Rect struct {
 // NewRect creates a Rect from coordinates and size.
 func NewRect(x, y, w, h int) Rect {
 	return Rect{X1: x, X2: x + w, Y1: y, Y2: y + h}
+}
+
+// Center returns the center point of a Rect
+func (r Rect) Center() (x, y int) {
+	x = (r.X1 + r.X2) / 2
+	y = (r.Y1 + r.Y2) / 2
+	return
+}
+
+// Intersect checks if 2 Rects overlap
+func (r1 Rect) Intersect(r2 Rect) bool {
+	return r1.X1 <= r2.X2 && r1.X2 >= r2.X1 && r1.Y1 <= r2.Y2 && r1.Y2 >= r2.Y1
 }
 
 // MapTmpl is a template 2d slice used for map generation.
@@ -52,17 +73,75 @@ func (m *MapTmpl) createRoom(r Rect) {
 	}
 }
 
+func (m *MapTmpl) createHTunnel(x1, x2, y int) {
+	if x1 > x2 {
+		x2, x1 = x1, x2 // swap x1 and x2
+	}
+
+	for x := x1; x <= x2; x++ {
+		m.Tiles[x][y].Pass = true
+		m.Tiles[x][y].Lite = true
+	}
+}
+
+func (m *MapTmpl) createVTunnel(y1, y2, x int) {
+	if y1 > y2 {
+		y2, y1 = y1, y2 // swap y1 and y2
+	}
+
+	for y := y1; y <= y2; y++ {
+		m.Tiles[x][y].Pass = true
+		m.Tiles[x][y].Lite = true
+	}
+}
+
 // GenerateDungeon creates a classic dungeon layout of rooms and hallways.
 func GenerateDungeon(cols, rows int) []*gorl.Tile {
 	dungeon := NewMapTmpl(cols, rows)
-	dungeon.createRoom(NewRect(2, 2, 5, 5))
-	dungeon.createRoom(NewRect(10, 2, 4, 5))
+	//dungeon.createRoom(NewRect(2, 2, 5, 5))
+
+	var rooms []Rect
+
+	for r := 0; r < maxRooms; r++ {
+
+		// Random width and height
+		w := gorl.RandRange(roomMinSize, roomMaxSize)
+		h := gorl.RandRange(roomMinSize, roomMaxSize)
+		// Random within map boundaries
+		x := gorl.RandRange(0, mapWidth-w-1)
+		y := gorl.RandRange(0, mapHeight-h-1)
+
+		newRoom := NewRect(x, y, w, h)
+		intersect := false // flag for if the generated room intersects with existing rooms
+
+		for _, otherRoom := range rooms {
+			if newRoom.Intersect(otherRoom) {
+				intersect = true
+				break
+			}
+		}
+		if !intersect {
+			dungeon.createRoom(newRoom)
+			newX, newY := newRoom.Center()
+			if len(rooms) > 0 {
+				prevX, prevY := rooms[len(rooms)-1].Center()
+				// flip a coin
+				if gorl.RandBool() {
+					dungeon.createHTunnel(prevX, newX, prevY)
+					dungeon.createVTunnel(prevY, newY, newX)
+				} else {
+					dungeon.createVTunnel(prevY, newY, prevX)
+					dungeon.createHTunnel(prevX, newX, newY)
+				}
+			}
+			rooms = append(rooms, newRoom)
+		}
+	}
 
 	var tileMapper = func(o gorl.Offset) *gorl.Tile {
 		tile := gorl.NewTile(o)
 		tile.Pass = dungeon.At(o).Pass
 		tile.Lite = dungeon.At(o).Lite
-		//tile.Face = dungeon.At(o).Face
 		return tile
 	}
 

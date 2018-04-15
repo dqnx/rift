@@ -12,11 +12,11 @@ func (s *CharacterScene) HandleInput(k gorl.Key) (Transition, Scene) {
 	switch k {
 	case gorl.KeyEsc:
 		return Next, nil
-	case 'k':
+	case 'j':
 		if s.selected < 1 {
 			s.selected++
 		}
-	case 'j':
+	case 'k':
 		if s.selected > 0 {
 			s.selected--
 		}

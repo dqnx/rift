@@ -2,6 +2,11 @@ package main
 
 import "gitlab.com/rauko1753/gorl"
 
+const (
+	mapWidth  = 60
+	mapHeight = 20
+)
+
 type DungeonScene struct {
 	// init stores if the scene has run Init and created the dungeon.
 	init     bool
@@ -13,7 +18,7 @@ func (s *DungeonScene) Init() {
 		return
 	}
 
-	s.tileGrid = GenerateDungeon(30, 20)
+	s.tileGrid = GenerateDungeon(mapWidth, mapHeight)
 }
 
 func (s *DungeonScene) HandleInput(k gorl.Key) (Transition, Scene) {
@@ -26,5 +31,5 @@ func (s *DungeonScene) HandleInput(k gorl.Key) (Transition, Scene) {
 
 func (s *DungeonScene) Render() {
 	TermDrawText(5, 2, "Dungeon")
-	TermDrawTileGrid(3, 3, s.tileGrid)
+	TermDrawTileGrid(2, 3, s.tileGrid)
 }
