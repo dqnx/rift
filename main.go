@@ -2,9 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
-	"time"
-
 	"gitlab.com/rauko1753/gorl"
 )
 
@@ -24,41 +21,25 @@ func main() {
 	// Handle Input
 	// Waits for input (key press)
 	fmt.Println("Starting Loop")
-	go func() {
-		for running {
-			if scenes.Empty() {
-				fmt.Println("Scenes Empty, exiting input loop.")
-				running = false
-			} else {
-				scenes.HandleKeyEvent(gorl.TermGetKey())
-			}
-		}
-		fmt.Println("Input loop done.")
-	}()
-
-	// Rendering loop
-	tick := time.Tick(frameRate * time.Microsecond)
-	frameStart := time.Now()
-
 	for running {
-		// Measure the actual fps
-		now := time.Now()
-		frameTime := now.Sub(frameStart)
-		frameStart = now
-		fps := 1.0 / frameTime.Seconds()
+		if scenes.Empty() {
+			fmt.Println("Scenes Empty, exiting loop.")
+			running = false
+			break
+		}
 
-		<-tick
-		// Clear
 		gorl.TermClear()
 
 		// Draw
 		// Row 0 is reserved for status
-		TermDrawText(0, 0, strconv.FormatFloat(fps, 'f', 1, 64))
+		//TermDrawText(0, 0, strconv.FormatFloat(fps, 'f', 1, 64))
 		scenes.RenderAll()
 
 		// Refresh
 		gorl.TermRefresh()
 
+		// Place at end, so first loop will draw immediately.
+		scenes.HandleKeyEvent(gorl.TermGetKey())
 	}
 	fmt.Println("Render loop done.")
 }
