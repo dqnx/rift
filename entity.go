@@ -16,4 +16,5 @@ func (a *Actor) Handle(v gorl.Event) {
 			a.Position = v.Dest
 		}
 	}
+
 }

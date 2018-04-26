@@ -19,6 +19,7 @@ func (s *DungeonScene) Init() {
 	if s.init {
 		return
 	}
+	fmt.Println("DungeonScene Init")
 
 	s.tileGrid = GenerateDungeon(mapWidth, mapHeight)
 	s.player = &Actor{Face: gorl.Char('@')}
@@ -65,14 +66,12 @@ func (s *DungeonScene) Render() {
 func (s *DungeonScene) MovePlayer(k gorl.Key) gorl.Event {
 	// Check for movement
 	if move, vector := KeyToVector(k); move {
-		fmt.Println(k, " valid")
 		vector.Y *= -1 // Y axis is flipped
 		// Get destination tile by getting adjacent tile from player.
 		if dest := s.player.Position.Adjacent[vector]; dest != nil {
-			v := gorl.MoveEvent{Dest: dest}
+			v := &gorl.MoveEvent{Dest: dest}
 			return v
 		}
 	}
-	fmt.Println("NOOOO")
 	return nil
 }
