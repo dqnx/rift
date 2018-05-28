@@ -1,7 +1,8 @@
 package main
 
 import "gitlab.com/rauko1753/gorl"
-import "fmt"
+
+//import "fmt"
 
 const (
 	mapWidth  = 60
@@ -19,7 +20,7 @@ func (s *DungeonScene) Init() {
 	if s.init {
 		return
 	}
-	fmt.Println("DungeonScene Init")
+	//fmt.Println("DungeonScene Init")
 
 	s.tileGrid = GenerateDungeon(mapWidth, mapHeight)
 	s.player = &Actor{Face: gorl.Char('@')}

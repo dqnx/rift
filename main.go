@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"gitlab.com/rauko1753/gorl"
 )
 
@@ -20,10 +19,8 @@ func main() {
 
 	// Handle Input
 	// Waits for input (key press)
-	fmt.Println("Starting Loop")
 	for running {
 		if scenes.Empty() {
-			fmt.Println("Scenes Empty, exiting loop.")
 			running = false
 			break
 		}
@@ -41,5 +38,4 @@ func main() {
 		// Place at end, so first loop will draw immediately.
 		scenes.HandleKeyEvent(gorl.TermGetKey())
 	}
-	fmt.Println("Render loop done.")
 }
