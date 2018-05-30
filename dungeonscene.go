@@ -24,6 +24,7 @@ func (s *DungeonScene) Init() {
 
 	s.tileGrid = GenerateDungeon(mapWidth, mapHeight)
 	s.player = &Actor{Face: gorl.Char('@')}
+	s.player.SetViewDistance(6)
 
 	// Place player at first available tile for now.
 	for _, t := range s.tileGrid {
@@ -45,6 +46,7 @@ func (s *DungeonScene) HandleInput(k gorl.Key) (Transition, Scene) {
 
 	if move := s.MovePlayer(k); move != nil {
 		s.player.Position.Handle(move)
+		s.player.Handle(move)
 	}
 
 	return Stay, nil
@@ -55,11 +57,11 @@ func (s *DungeonScene) Render() {
 
 	view := gorl.Offset{2, 3}
 	r := &gorl.RenderEvent{}
-	for _, t := range s.tileGrid {
-		if t.Lite {
-			t.Handle(r)
-			gorl.TermDraw(t.Offset.X+view.X, t.Offset.Y+view.Y, r.Render)
-		}
+	f := &gorl.FoVEvent{}
+	s.player.Camera.Process(f)
+	for _, t := range f.FoV {
+		t.Handle(r)
+		gorl.TermDraw(t.Offset.X+view.X, t.Offset.Y+view.Y, r.Render)
 	}
 }
 
