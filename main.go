@@ -4,7 +4,9 @@ import (
 	"gitlab.com/rauko1753/gorl"
 )
 
-// Need to wrap in mainthread...
+//const debug = true
+const debug = false
+
 func main() {
 
 	// Frametime in microseconds

@@ -147,5 +147,13 @@ func GenerateDungeon(cols, rows int) []*gorl.Tile {
 
 	tileGrid := gorl.GenTileGrid(cols, rows, tileMapper)
 
+	var insertWalls = func(t *gorl.Tile) {
+		if t.Pass == false {
+			t.Face = gorl.Char('#')
+		}
+	}
+
+	gorl.GenTransform(tileGrid, insertWalls)
+
 	return tileGrid
 }

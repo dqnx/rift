@@ -58,10 +58,17 @@ func (s *DungeonScene) Render() {
 	view := gorl.Offset{2, 3}
 	r := &gorl.RenderEvent{}
 	f := &gorl.FoVEvent{}
-	s.player.Camera.Process(f)
-	for _, t := range f.FoV {
-		t.Handle(r)
-		gorl.TermDraw(t.Offset.X+view.X, t.Offset.Y+view.Y, r.Render)
+	if debug {
+		for _, t:= range s.tileGrid {
+			t.Handle(r)
+			gorl.TermDraw(t.Offset.X+view.X, t.Offset.Y+view.Y, r.Render)
+		}
+	} else {
+		s.player.camera.Process(f)
+		for _, t := range f.FoV {
+			t.Handle(r)
+			gorl.TermDraw(t.Offset.X+view.X, t.Offset.Y+view.Y, r.Render)
+		}
 	}
 }
 
