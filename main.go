@@ -8,6 +8,7 @@ import (
 	"github.com/BigJk/ramen/font"
 	"github.com/BigJk/ramen/t"
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
 )
 
 func main() {
@@ -23,6 +24,8 @@ func main() {
 		panic(err)
 	}
 
+	game := &Game{}
+	game.Init()
 	// set a tick hook. This function will be executed
 	// each tick (60 ticks per second by default) even
 	// when the fps is lower than 60fps. This is a good
@@ -30,8 +33,13 @@ func main() {
 	//
 	// The timeDelta parameter is the elapsed time in seconds
 	// since the last tick.
+
 	con.SetTickHook(func(timeElapsed float64) error {
 		// your game logic
+		if inpututil.IsKeyJustPressed(ebiten.KeyRight) {
+			command := WalkAction()
+		}
+
 		return nil
 	})
 
@@ -51,4 +59,8 @@ func main() {
 
 	// start the console with a scaling of 1
 	con.Start(1)
+}
+
+func handleInput() {
+
 }
