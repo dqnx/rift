@@ -5,6 +5,7 @@ type Action interface {
 	Perform(*Actor)
 }
 
+// WalkAction advances an actor one unit of movement.
 func WalkAction(a *Actor, x int, y int) func() {
 	return func() {
 		a.Move(x, y)
