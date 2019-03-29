@@ -1,33 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"os"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
+	dim "github.com/sean-brock/dimension"
 	"golang.org/x/image/colornames"
 )
-
-// Tile is a "char" enum.
-type Tile int
-
-const (
-	At   = Tile(176)
-	Hash = Tile(211)
-	Dot  = Tile(9)
-)
-
-type Entity struct {
-	Tile
-	Name string
-}
-
-type Position struct {
-	X int
-	Y int
-}
 
 func loadPicture(path string) (pixel.Picture, error) {
 	file, err := os.Open(path)
@@ -54,7 +35,7 @@ func LaunchUI() {
 		panic(err)
 	}
 
-	spritesheet, err := loadPicture("Zilk_16x16.png")
+	spritesheet, err := loadPicture("tileset.png")
 	if err != nil {
 		panic(err)
 	}
@@ -77,36 +58,22 @@ func LaunchUI() {
 		}
 	}
 
-	tiles := make(map[Position]Tile)
-	const (
-		testMapX = 4
-		testMapY = 6
-	)
-	inputMap := func() [testMapX * testMapY]int {
-		return [...]int{
-			211, 211, 211, 211,
-			211, 9, 9, 211,
-			211, 9, 9, 211,
-			211, 9, 9, 211,
-			211, 9, 9, 211,
-			211, 211, 211, 211}
-	}
-	for i, t := range inputMap() {
-		p := Position{X: i % testMapX, Y: i / testMapX}
-		fmt.Println(p)
-		tiles[p] = Tile(t)
-	}
-
-	//last := time.Now()
+	screen := MakeScreen(dim.V(6, 6), dim.V(0, 0))
+	screen.Set(dim.V(0, 1), W2v)
+	screen.Set(dim.V(0, 2), W2v)
+	screen.Set(dim.V(0, 3), W2v)
+	screen.Set(dim.V(0, 4), W2v)
+	screen.Set(dim.V(0, 0), W2v)
+	screen.Set(dim.V(0, 5), W2v)
+	screen.Set(dim.V(1, 2), At)
 
 	for !win.Closed() {
+		tiles := screen.Tiles(dim.V(0, 0))
 		batch.Clear()
 		for pos, tile := range tiles {
 			spritePos := pixel.IM.Moved(pixel.V(float64(pos.X*tileX+tileXh), float64(pos.Y*tileY+tileYh)))
 			tileSprites[tile].Draw(batch, spritePos)
 		}
-		//dt := time.Since(last).Seconds()
-		//last = time.Now()
 		win.Clear(colornames.Black)
 		batch.Draw(win)
 		win.Update()
