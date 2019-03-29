@@ -7,5 +7,4 @@ import (
 
 func main() {
 	pixelgl.Run(LaunchUI)
-
 }
