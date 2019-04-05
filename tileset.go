@@ -1,5 +1,22 @@
 package main
 
+import (
+	"bytes"
+
+	"golang.org/x/text/encoding/charmap"
+	"golang.org/x/text/transform"
+)
+
+// CP437 encodes a string as a buffer of ints in CodePage437.
+func CP437(s string) bytes.Buffer {
+	var b bytes.Buffer
+	encoder := transform.NewWriter(&b, charmap.CodePage437.NewEncoder())
+	encoder.Write([]byte(s))
+	encoder.Close()
+
+	return b
+}
+
 // Tile is a "char" enum.
 type Tile int
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"gitlab.com/faiface/pixel"
-	"gitlab.com/faiface/pixel/pixelgl"
+	"github.com/faiface/pixel"
+	"github.com/faiface/pixel/pixelgl"
 )
 
 // Scene represents a state of the game. Each scene has its own logic and rendering.

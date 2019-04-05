@@ -32,8 +32,8 @@ func LaunchUI() {
 		tileY           = 16
 		tileXh          = tileX / 2
 		tileYh          = tileY / 2
-		screenX			= 512
-		screenY			= 256
+		screenX         = 512
+		screenY         = 256
 	)
 
 	cfg := pixelgl.WindowConfig{
@@ -51,8 +51,6 @@ func LaunchUI() {
 		panic(err)
 	}
 	batch := pixel.NewBatch(&pixel.TrianglesData{}, spritesheet)
-
-	
 
 	var tileSprites [spritesheetCols * spritesheetRows]*pixel.Sprite
 	for y, i := spritesheet.Bounds().Min.Y, 0; y < spritesheet.Bounds().Max.Y; y += tileY {
@@ -79,7 +77,7 @@ func LaunchUI() {
 				tileSprites[tile].Draw(batch, spritePos)
 			}
 		}
-		
+
 		win.Clear(colornames.Black)
 		batch.Draw(win)
 		win.Update()

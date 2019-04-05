@@ -14,7 +14,6 @@ type Screen struct {
 	tiles []Tile
 }
 
-
 func (s *Screen) Size() dim.Vec {
 	return s.size
 }
@@ -55,15 +54,17 @@ func MakeScreen(s, p dim.Vec) *Screen {
 }
 
 type Outline int
+
 const (
 	Single Outline = iota
-	Double 
+	Double
 )
+
 // MakeScreenOutline returns a screen with lined outer edges.
 func MakeScreenOutline(s dim.Vec, p dim.Vec, o Outline) *Screen {
 	t := make([]Tile, s.Dot())
 	for y := range s.Y {
-		col := y*s.X
+		col := y * s.X
 		for x := range s.X {
 			i := x + col
 			if x == 0 && y == 0 {
@@ -107,5 +108,5 @@ func MakeScreenOutline(s dim.Vec, p dim.Vec, o Outline) *Screen {
 			}
 		}
 	}
-	return &Screen{size: s, pos: p, tiles: t}	
+	return &Screen{size: s, pos: p, tiles: t}
 }
