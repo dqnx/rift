@@ -26,14 +26,15 @@ func loadPicture(path string) (pixel.Picture, error) {
 // LaunchUI creates the game window and starts the input handling.
 func LaunchUI() {
 	const (
-		spritesheetRows = 16
-		spritesheetCols = 16
-		tileX           = 16
-		tileY           = 16
-		tileXh          = tileX / 2
-		tileYh          = tileY / 2
-		screenX         = 512
-		screenY         = 256
+		spritesheetRows      = 16
+		spritesheetCols      = 16
+		spriteNum       byte = spritesheetCols*spritesheetRows - 1
+		tileX                = 16
+		tileY                = 16
+		tileXh               = tileX / 2
+		tileYh               = tileY / 2
+		screenX              = 512
+		screenY              = 256
 	)
 
 	cfg := pixelgl.WindowConfig{
@@ -53,7 +54,7 @@ func LaunchUI() {
 	batch := pixel.NewBatch(&pixel.TrianglesData{}, spritesheet)
 
 	var tileSprites [spritesheetCols * spritesheetRows]*pixel.Sprite
-	for y, i := spritesheet.Bounds().Min.Y, 0; y < spritesheet.Bounds().Max.Y; y += tileY {
+	for y, i := spritesheet.Bounds().Max.Y-tileY, 0; y > spritesheet.Bounds().Min.Y-tileY; y -= tileY {
 		for x := spritesheet.Bounds().Min.X; x < spritesheet.Bounds().Max.X; x += tileX {
 			tileSprites[i] = pixel.NewSprite(spritesheet, pixel.R(x, y, x+tileX, y+tileY))
 			i++

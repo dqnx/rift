@@ -1,8 +1,10 @@
 package main
 
 import (
-	"github.com/faiface/pixel"
+	"errors"
+
 	"github.com/faiface/pixel/pixelgl"
+	dim "github.com/sean-brock/dimension"
 )
 
 // Scene represents a state of the game. Each scene has its own logic and rendering.
@@ -29,7 +31,7 @@ const (
 // SceneManager allows scenes to be swapped and added.
 type SceneManager struct {
 	scenes []Scene
-	size	dim.Vec
+	size   dim.Vec
 }
 
 // Init adds a scene to initialize the scene list.
@@ -74,7 +76,7 @@ func (m *SceneManager) HandleKeyEvent(w *pixelgl.Window) {
 }
 
 // RenderAll calls render on each scene
-func (m *SceneManager) Render() []TileList, error {
+func (m *SceneManager) Render() ([]TileList, error) {
 	if len(m.scenes) > 0 {
 		tiles := make([]TileList, len(m.scenes))
 		for i, s := range m.scenes {
@@ -82,5 +84,5 @@ func (m *SceneManager) Render() []TileList, error {
 		}
 		return tiles, nil
 	}
-	return nil, errors.New("Failed to Render, no scenes.")
+	return nil, errors.New("failed to render no scenes")
 }
