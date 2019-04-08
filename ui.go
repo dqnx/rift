@@ -39,7 +39,7 @@ func LaunchUI() {
 
 	cfg := pixelgl.WindowConfig{
 		Title:  "Rift",
-		Bounds: pixel.R(0, 0, 256, 256),
+		Bounds: pixel.R(0, 0, screenX, screenY),
 		VSync:  true,
 	}
 	win, err := pixelgl.NewWindow(cfg)
