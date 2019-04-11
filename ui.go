@@ -47,7 +47,7 @@ func LaunchUI() {
 		panic(err)
 	}
 
-	spritesheet, err := loadPicture("tileset.png")
+	spritesheet, err := loadPicture("assets/tileset.png")
 	if err != nil {
 		panic(err)
 	}
@@ -66,6 +66,10 @@ func LaunchUI() {
 
 	for !win.Closed() {
 		scenes.HandleKeyEvent(win)
+
+		if scenes.Empty() {
+			break
+		}
 		sceneTiles, err := scenes.Render()
 		if err != nil {
 			panic(err)

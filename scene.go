@@ -12,6 +12,7 @@ type Scene interface {
 	Init(size dim.Vec)
 	HandleInput(w *pixelgl.Window) (Transition, Scene)
 	ExportTiles() TileList
+	ExportText() TextList
 }
 
 // Transition is a message, describing what to do after a scene frame.

@@ -16,3 +16,8 @@ func StringCP437(s string) []byte {
 
 	return b.Bytes()
 }
+
+func RuneCP437(r rune) byte {
+	c, _ := charmap.CodePage437.EncodeRune(r)
+	return c
+}
