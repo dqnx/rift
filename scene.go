@@ -11,6 +11,7 @@ import (
 type Scene interface {
 	Init(size dim.Vec)
 	HandleInput(w *pixelgl.Window) (Transition, Scene)
+	Update(g *Game)
 	ExportTiles() TileList
 	ExportText() TextList
 }
