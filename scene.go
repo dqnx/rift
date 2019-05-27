@@ -77,6 +77,16 @@ func (m *SceneManager) HandleKeyEvent(w *pixelgl.Window) {
 
 }
 
+// Update calls update on the top scene
+func (m *SceneManager) Update(g *Game) error {
+
+	if len(m.scenes) > 0 {
+		m.scenes[0].Update(g)
+		return nil
+	}
+	return errors.New("failed to update no scenes")
+}
+
 // RenderAll calls render on each scene
 func (m *SceneManager) Render() ([]TileList, error) {
 	if len(m.scenes) > 0 {

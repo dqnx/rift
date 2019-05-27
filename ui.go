@@ -64,14 +64,17 @@ func LaunchUI() {
 	scenes := SceneManager{size: dim.V(screenX/tileX, screenY/tileY)}
 	scenes.Init(&TitleScene{})
 
-	game := &Game{background: colornames.Darkgrey, foreground: White}
+	game := &Game{background: colornames.Darkgrey, foreground: colornames.White}
 	for !win.Closed() {
 		scenes.HandleKeyEvent(win)
 		if scenes.Empty() {
 			break
 		}
 
-		scenes.Update(game)
+		err := scenes.Update(game)
+		if err != nil {
+			panic(err)
+		}
 		sceneTiles, err := scenes.Render()
 		if err != nil {
 			panic(err)

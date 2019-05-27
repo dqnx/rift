@@ -16,9 +16,9 @@ type OptionsScene struct {
 func (s *OptionsScene) Init(size dim.Vec) {
 	s.size = size
 	//s.screen = MakeScreenOutline(size, dim.V(1,1), Single);
-	s.title = *StringToScreen("RIFT", dim.V(4, 11))
-	s.options[0] = selector{*StringToScreen("start", dim.V(4, 7)), &OptionsScene{}}
-	s.options[1] = selector{*StringToScreen("options", dim.V(4, 6)), &OptionsScene{}}
+	s.title = *StringToScreen("OPTIONS", dim.V(4, 11))
+	s.options[0] = selector{*StringToScreen("option1", dim.V(4, 7)), &OptionsScene{}}
+	s.options[1] = selector{*StringToScreen("option2", dim.V(4, 6)), &OptionsScene{}}
 	s.options[2] = selector{*StringToScreen("exit", dim.V(4, 5)), nil}
 }
 
@@ -46,6 +46,8 @@ func (s *OptionsScene) HandleInput(w *pixelgl.Window) (Transition, Scene) {
 	}
 	return Stay, nil
 }
+
+func (s *OptionsScene) Update(g *Game) {}
 
 // ExportTiles exports the scene's graphics state to a list of Tiles.
 func (s *OptionsScene) ExportTiles() TileList {
