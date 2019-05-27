@@ -11,7 +11,9 @@ import (
 type Scene interface {
 	Init(size dim.Vec)
 	HandleInput(w *pixelgl.Window) (Transition, Scene)
+	Update(g *Game)
 	ExportTiles() TileList
+	ExportText() TextList
 }
 
 // Transition is a message, describing what to do after a scene frame.
@@ -73,6 +75,16 @@ func (m *SceneManager) HandleKeyEvent(w *pixelgl.Window) {
 		m.scenes[0].Init(m.size)
 	}
 
+}
+
+// Update calls update on the top scene
+func (m *SceneManager) Update(g *Game) error {
+
+	if len(m.scenes) > 0 {
+		m.scenes[0].Update(g)
+		return nil
+	}
+	return errors.New("failed to update no scenes")
 }
 
 // RenderAll calls render on each scene

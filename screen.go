@@ -57,3 +57,9 @@ func MakeScreen(s, p dim.Vec) *Screen {
 	}
 	return &Screen{size: s, pos: p, tiles: t}
 }
+
+func StringToScreen(s string, p dim.Vec) *Screen {
+	tiles := StringCP437(s)
+	size := dim.V(len(s), 1)
+	return &Screen{size: size, pos: p, tiles: tiles}
+}

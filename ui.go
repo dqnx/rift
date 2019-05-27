@@ -39,7 +39,7 @@ func LaunchUI() {
 
 	cfg := pixelgl.WindowConfig{
 		Title:  "Rift",
-		Bounds: pixel.R(0, 0, 256, 256),
+		Bounds: pixel.R(0, 0, screenX, screenY),
 		VSync:  true,
 	}
 	win, err := pixelgl.NewWindow(cfg)
@@ -47,7 +47,7 @@ func LaunchUI() {
 		panic(err)
 	}
 
-	spritesheet, err := loadPicture("tileset.png")
+	spritesheet, err := loadPicture("assets/tileset.png")
 	if err != nil {
 		panic(err)
 	}
@@ -64,8 +64,17 @@ func LaunchUI() {
 	scenes := SceneManager{size: dim.V(screenX/tileX, screenY/tileY)}
 	scenes.Init(&TitleScene{})
 
+	game := &Game{background: colornames.Darkgrey, foreground: colornames.White}
 	for !win.Closed() {
 		scenes.HandleKeyEvent(win)
+		if scenes.Empty() {
+			break
+		}
+
+		err := scenes.Update(game)
+		if err != nil {
+			panic(err)
+		}
 		sceneTiles, err := scenes.Render()
 		if err != nil {
 			panic(err)

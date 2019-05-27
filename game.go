@@ -1,9 +1,14 @@
 package main
 
+import "image/color"
+
 // Game stores and handles all game data.
 type Game struct {
 	actors       []Actor
 	currentActor int
+
+	background color.RGBA
+	foreground color.RGBA
 }
 
 // Init generates a default actor list.
