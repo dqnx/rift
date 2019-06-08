@@ -48,6 +48,14 @@ func (s *Screen) Set(p dim.Vec, r rune) error {
 	return errors.New("index in out of range")
 }
 
+// Clear sets all tiles to blank
+func (s *Screen) Clear() {
+	blank, _ := charmap.CodePage437.EncodeRune(' ')
+	for i := range s.tiles {
+		s.tiles[i] = blank
+	}
+}
+
 // MakeScreen returns a screen of the specified pos and size, with blank elements.
 func MakeScreen(s, p dim.Vec) *Screen {
 	t := make([]byte, s.Dot())
@@ -62,4 +70,16 @@ func StringToScreen(s string, p dim.Vec) *Screen {
 	tiles := StringCP437(s)
 	size := dim.V(len(s), 1)
 	return &Screen{size: size, pos: p, tiles: tiles}
+}
+
+// Outline sets all border tiles to the specified rune.
+func (s *Screen) Outline(r rune) {
+	size := s.size
+	for x := 0; x < size.X; x++ {
+		for y := 0; y < size.Y; y++ {
+			if x == 0 || x == size.X-1 || y == 0 || y == size.Y-1 {
+				s.Set(dim.V(x, y), r)
+			}
+		}
+	}
 }

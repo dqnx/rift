@@ -17,9 +17,10 @@ func (s *OptionsScene) Init(size dim.Vec) {
 	s.size = size
 	//s.screen = MakeScreenOutline(size, dim.V(1,1), Single);
 	s.title = *StringToScreen("OPTIONS", dim.V(4, 11))
-	s.options[0] = selector{*StringToScreen("option1", dim.V(4, 7)), &OptionsScene{}}
-	s.options[1] = selector{*StringToScreen("option2", dim.V(4, 6)), &OptionsScene{}}
-	s.options[2] = selector{*StringToScreen("exit", dim.V(4, 5)), nil}
+	option := &OptionsScene{}
+	s.options[0] = selector{*StringToScreen("option1", dim.V(4, 7)), option}
+	s.options[1] = selector{*StringToScreen("option2", dim.V(4, 6)), option}
+	s.options[2] = selector{*StringToScreen("back", dim.V(4, 5)), &TitleScene{}}
 }
 
 // HandleInput selects the different menu options.

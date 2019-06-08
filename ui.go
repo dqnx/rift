@@ -61,10 +61,12 @@ func LaunchUI() {
 		}
 	}
 
-	scenes := SceneManager{size: dim.V(screenX/tileX, screenY/tileY)}
+	size := dim.V(screenX/tileX, screenY/tileY)
+	scenes := SceneManager{size: size}
 	scenes.Init(&TitleScene{})
 
-	game := &Game{background: colornames.Darkgrey, foreground: colornames.White}
+	game := &Game{background: colornames.Darkgrey, foreground: colornames.White, size: size.Add(dim.V(-2, -2))}
+	game.Init()
 	for !win.Closed() {
 		scenes.HandleKeyEvent(win)
 		if scenes.Empty() {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/faiface/pixel/pixelgl"
 	dim "github.com/sean-brock/dimension"
@@ -65,10 +66,15 @@ func (m *SceneManager) HandleKeyEvent(w *pixelgl.Window) {
 			// Removing one element makes it empty anyways.
 			m.scenes = nil
 		}
+
 	case Append:
 		m.scenes = append(m.scenes, s)
 		_, m.scenes = m.scenes[0], m.scenes[1:]
 		m.scenes[0].Init(m.size)
+		for i, s := range m.scenes {
+			fmt.Println(i, ':', typeof(s))
+		}
+
 	case Insert:
 		insert := []Scene{s}
 		m.scenes = append(insert, m.scenes...)
@@ -97,4 +103,8 @@ func (m *SceneManager) Render() ([]TileList, error) {
 		return tiles, nil
 	}
 	return nil, errors.New("failed to render no scenes")
+}
+
+func typeof(v interface{}) string {
+	return fmt.Sprintf("%T", v)
 }
