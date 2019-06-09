@@ -48,7 +48,7 @@ func (s *OptionsScene) HandleInput(w *pixelgl.Window) (Transition, Scene) {
 	return Stay, nil
 }
 
-func (s *OptionsScene) Update(g *Game) {}
+func (s *OptionsScene) Update() {}
 
 // ExportTiles exports the scene's graphics state to a list of Tiles.
 func (s *OptionsScene) ExportTiles() TileList {

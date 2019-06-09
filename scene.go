@@ -12,7 +12,7 @@ import (
 type Scene interface {
 	Init(size dim.Vec)
 	HandleInput(w *pixelgl.Window) (Transition, Scene)
-	Update(g *Game)
+	Update()
 	ExportTiles() TileList
 	ExportText() TextList
 }
@@ -84,10 +84,10 @@ func (m *SceneManager) HandleKeyEvent(w *pixelgl.Window) {
 }
 
 // Update calls update on the top scene
-func (m *SceneManager) Update(g *Game) error {
+func (m *SceneManager) Update() error {
 
 	if len(m.scenes) > 0 {
-		m.scenes[0].Update(g)
+		m.scenes[0].Update()
 		return nil
 	}
 	return errors.New("failed to update no scenes")

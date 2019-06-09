@@ -56,6 +56,14 @@ func (s *Screen) Clear() {
 	}
 }
 
+// Fill sets all tiles to the input rune
+func (s *Screen) Fill(r rune) {
+	c, _ := charmap.CodePage437.EncodeRune(r)
+	for i := range s.tiles {
+		s.tiles[i] = c
+	}
+}
+
 // MakeScreen returns a screen of the specified pos and size, with blank elements.
 func MakeScreen(s, p dim.Vec) *Screen {
 	t := make([]byte, s.Dot())

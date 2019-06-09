@@ -52,7 +52,7 @@ func (s *TitleScene) HandleInput(w *pixelgl.Window) (Transition, Scene) {
 	return Stay, nil
 }
 
-func (s *TitleScene) Update(g *Game) {}
+func (s *TitleScene) Update() {}
 
 // ExportTiles exports the scene's graphics state to a list of Tiles.
 func (s *TitleScene) ExportTiles() TileList {

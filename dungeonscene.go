@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/faiface/pixel/pixelgl"
 	dim "github.com/sean-brock/dimension"
+	"golang.org/x/image/colornames"
 )
 
 // DungeonScene shows the title message and start options.
@@ -12,16 +13,23 @@ type DungeonScene struct {
 	dungeonSize dim.Vec
 	dungeon     *Screen
 	advance     bool
+	Game
 }
 
 func (s *DungeonScene) Init(size dim.Vec) {
+	// Create Game
+	s.Game.background = colornames.Darkgrey
+	s.Game.foreground = colornames.White
+	s.Game.size = size.Add(dim.V(-2, -2))
+	s.Game.Init()
+
 	// Create border
 	s.size = size.Add(dim.V(-1, -1))
 	s.border = MakeScreen(size, dim.V(0, 0))
 	s.border.Outline('#')
 
 	// Create dungeon floor inside border
-	s.dungeonSize = size.Add(dim.V(-3, -3))
+	s.dungeonSize = size.Add(dim.V(-2, -2))
 	s.dungeon = MakeScreen(s.dungeonSize, dim.V(1, 1))
 }
 
@@ -36,13 +44,13 @@ func (s *DungeonScene) HandleInput(w *pixelgl.Window) (Transition, Scene) {
 	return Stay, nil
 }
 
-func (s *DungeonScene) Update(g *Game) {
+func (s *DungeonScene) Update() {
 	if !s.advance {
 		return
 	}
-	g.Process()
+	s.Process()
 	s.dungeon.Clear()
-	for _, a := range g.Actors() {
+	for _, a := range s.Actors() {
 		s.dungeon.Set(a.Position, '@')
 	}
 	s.advance = false

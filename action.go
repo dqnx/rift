@@ -19,7 +19,7 @@ func MakeWalkAction(a *Actor, dv dim.Vec) *Action {
 	action.actor = a
 	action.action = func(g *Game, actor *Actor) bool {
 		newPos := a.Position.Add(dv)
-		if newPos.Inside(g.Size()) {
+		if newPos.Inside(g.Size().Add(dim.V(-1, -1))) {
 			actor.Move(dv)
 			return true
 		}
