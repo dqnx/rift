@@ -33,8 +33,8 @@ func LaunchUI() {
 		tileY                = 16
 		tileXh               = tileX / 2
 		tileYh               = tileY / 2
-		screenX              = 512
-		screenY              = 256
+		screenX              = 1024
+		screenY              = 512
 	)
 
 	cfg := pixelgl.WindowConfig{
@@ -63,7 +63,7 @@ func LaunchUI() {
 
 	size := dim.V(screenX/tileX, screenY/tileY)
 	scenes := SceneManager{size: size}
-	scenes.Init(&TitleScene{})
+	scenes.Init(new(TitleScene))
 
 	for !win.Closed() {
 		scenes.HandleKeyEvent(win)

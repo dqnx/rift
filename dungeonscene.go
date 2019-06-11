@@ -16,6 +16,7 @@ type DungeonScene struct {
 	Game
 }
 
+// Init initlizes the dungeon: game and screens.
 func (s *DungeonScene) Init(size dim.Vec) {
 	// Create Game
 	s.Game.background = colornames.Darkgrey
@@ -44,6 +45,7 @@ func (s *DungeonScene) HandleInput(w *pixelgl.Window) (Transition, Scene) {
 	return Stay, nil
 }
 
+// Update processes the next actors turn.
 func (s *DungeonScene) Update() {
 	if !s.advance {
 		return

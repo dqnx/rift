@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/heap"
 	"image/color"
 	"math/rand"
 
@@ -9,8 +10,9 @@ import (
 
 // Game stores and handles all game data.
 type Game struct {
-	actors       []Actor
-	currentActor int
+	actors       map[ID]*Actor
+	energy       PriorityQueue
+	currentActor ID
 
 	background color.RGBA
 	foreground color.RGBA
@@ -22,7 +24,7 @@ func (g *Game) Size() dim.Vec {
 	return g.size
 }
 
-func (g *Game) Actors() []Actor {
+func (g *Game) Actors() map[ID]Actor {
 	return g.actors
 }
 
@@ -32,16 +34,22 @@ func (g *Game) Init() {
 		a := Actor{ID: i}
 		a.Position.X = rand.Intn(g.size.X)
 		a.Position.Y = rand.Intn(g.size.Y)
-		g.actors = append(g.actors, a)
+		g.actors[ID(i)] = a
 	}
+
+	g.energy = make(PriorityQueue, 1)
+	heap.Init(&g.energy)
 }
 
 // Process will update an actor.
 func (g *Game) Process() {
-	g.actors[g.currentActor].Update()
-	action := g.actors[g.currentActor].Action()
+	energized := heap.Pop(&g.energy).(*Item)
+	// Validate ID exists
+	actor := g.actors[energized.ID]
+	actor.Update()
+	action := actor.Action()
 	success := action.Perform(g)
-	if success {
-		g.currentActor = (g.currentActor + 1) % len(g.actors)
+	if !success {
+		heap.Push(&g.energy, energized)
 	}
 }
