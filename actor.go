@@ -9,9 +9,11 @@ import (
 
 // Actor is any game character or sentient creature.
 type Actor struct {
-	Name     string
-	ID       int
+	Name string
+	ID
 	Position dim.Vec
+	// Flyweight these
+	Speed int
 }
 
 // Update will return an action from an actor.
