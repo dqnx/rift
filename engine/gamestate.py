@@ -4,20 +4,25 @@ Implements a state machine and states for the game.
 """
 
 from state import State, StateMachine, StateTransition
+from userinterface import MainMenuUI
+from abc import ABC, abstractmethod
+import tcod
 
-class MenuState(State):
+class GameState(ABC):
+    """Abstract base class defining render (with a UI object) and update methods."""
     def __init__(self):
-        self.selected = 0
-        self.options = ['Start', 'Exit']
-        self.exit = True
+        self._ui = None
 
-    def name(self):
-        return "MenuState"
+    @property
+    def ui(self):
+        return self._ui
 
-    def transition(self):
-        if self.exit:
-            return (StateTransition.EXIT, None)
-        return (StateTransition.NONE, None)
+    @abstractmethod
+    def update(self):
+        pass
+
+    def render(self, console: tcod.console.Console):
+        self.ui.render(console)
 
 class GameStateMachine(StateMachine):
     def __init__(self):

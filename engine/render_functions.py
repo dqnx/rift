@@ -16,6 +16,7 @@ def render_all(con, entities, game_map, screen_width, screen_height, colors):
         draw_entity(con, entity)
 
     libtcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
+    libtcod.console_blit()
 
 
 def clear_all(con, entities):
