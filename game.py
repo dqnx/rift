@@ -1,6 +1,5 @@
 from map_objects.game_map import GameMap
 from entity import Entity, Hero
-from action import WalkAction
 from enum import Enum
 
 class Game:
