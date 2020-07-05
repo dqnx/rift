@@ -2,11 +2,10 @@
 
 Implements a state machine and states for the game.
 """
-
-from state import State, StateMachine, StateTransition
-from userinterface import MainMenuUI
 from abc import ABC, abstractmethod
 import tcod
+from state import StateMachine
+
 
 class GameState(ABC):
     """Abstract base class defining render (with a UI object) and update methods."""
@@ -25,9 +24,9 @@ class GameState(ABC):
         self.ui.render(console)
 
 class GameStateMachine(StateMachine):
-    def __init__(self):
+    def __init__(self, initial_state: GameState):
         super().__init__()
-        self.states.push(MenuState())
+        self.states.push(initial_state)
 
     def update(self):
         print("Updating:", self.states.top().name())

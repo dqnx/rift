@@ -1,6 +1,6 @@
 import tcod
 import tcod.event
-from input_handlers import InputHandler
+from engine.input_handlers import InputHandler
 from render_functions import clear_all, render_all
 from map_objects.game_map import GameMap
 from entity import Entity

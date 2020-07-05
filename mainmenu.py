@@ -2,7 +2,6 @@
 
 Implements the main menu user interface, game state, and input handling methods.
 """
-
 from engine.gamestate import GameState
 from state import State
 
