@@ -4,9 +4,9 @@ Provides a user interface base class and specific gameplay interfaces/menus.
 """
 
 from abc import ABC, abstractmethod
+from enum import Enum
 import tcod
 from settings import Settings
-from enum import Enum
 
 class Direction(Enum):
     LEFT = 0
@@ -18,6 +18,3 @@ class UserInterface(ABC):
     @abstractmethod
     def render(self, console: tcod.console.Console):
         pass
-
-
-

@@ -1,23 +1,5 @@
 import tcod
 import tcod.event
-from game import Game, Direction
-from action import WalkAction
-
-def handle_event(event, game):
-    if event.type == "QUIT":
-        raise SystemExit()
-    elif event.type == "KEYDOWN":
-        handle_hero(event, game)
-
-def handle_hero(event, game):
-    if event.sym == tcod.event.K_UP:
-        game.player.set_action(WalkAction(Direction.NORTH))
-    elif event.sym == tcod.event.K_DOWN:
-        game.player.set_action(WalkAction(Direction.SOUTH))
-    elif event.sym == tcod.event.K_RIGHT:
-        game.player.set_action(WalkAction(Direction.EAST))
-    elif event.sym == tcod.event.K_LEFT:
-        game.player.set_action(WalkAction(Direction.WEST))
 
 """event
 
@@ -61,6 +43,10 @@ MOVE_KEYS = {  # key_symbol: (x, y)
     tcod.event.K_n: (1, 1),
 }
 
+SELECT_KEYS = [
+    tcod.event.K_SPACE,
+    tcod.event.K_RETURN
+]
 
 class InputHandler(tcod.event.EventDispatch[None]):
     """A state-based superclass that converts `events` into `commands`.
@@ -75,7 +61,6 @@ class InputHandler(tcod.event.EventDispatch[None]):
 
     def __init__(self):
         super().__init__()
-        #self.ui_hook = ui()
 
     def ev_quit(self, event: tcod.event.Quit) -> None:
         """The window close button was clicked or Alt+F$ was pressed."""
@@ -90,6 +75,8 @@ class InputHandler(tcod.event.EventDispatch[None]):
             return self.cmd_move(*MOVE_KEYS[event.sym])
         elif event.sym == tcod.event.K_ESCAPE:
             return self.cmd_escape()
+        elif event.sym in SELECT_KEYS:
+            return self.cmd_select()
 
     def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -> None:
         """The window was clicked."""
@@ -103,6 +90,10 @@ class InputHandler(tcod.event.EventDispatch[None]):
         """Intent to move: `x` and `y` is the direction, both may be 0."""
         print("Command move: " + str((x, y)))
         return ('move', (x, y))
+    
+    def cmd_select(self) -> None:
+        """Intent to make a selection."""
+        print("Command select.")
 
     def cmd_escape(self) -> None:
         """Intent to exit this state."""

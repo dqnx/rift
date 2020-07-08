@@ -1,58 +1,36 @@
 import tcod
-import tcod.event
-from engine.input_handlers import InputHandler
-from render_functions import clear_all, render_all
-from map_objects.game_map import GameMap
-from entity import Entity
+
+from engine.gamestate import GameStateMachine
 from settings import Settings
+from mainmenu import MenuState
 
 def main():
-
+    # Initialize global settings.
     sets = Settings()
     sets.initialize()
 
-    map_width, map_height = sets.map_size
-    screen_width, screen_height = sets.screen_size
+    # Load the font and create a tileset.
+    tileset = sets.font().tileset(*sets.tile_size)
 
-    player = Entity(int(screen_width / 2), int(screen_height / 2), '@', tcod.white)
-    npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), '@', tcod.yellow)
-    entities = [npc, player]
+    # Create the game-scene state machine and initialize with the main menu.
+    game_state = GameStateMachine(MenuState())
 
-    con = tcod.console.Console(screen_width, screen_height)
-    
-    game_map = GameMap(map_width, map_height)
-
-    """
-    root_console = tcod.console_init_root(80, 60)
-    state = State()
-    while True:
-    tcod.console_flush()
-    for event in tcod.event.wait():
-        state.dispatch(event)
-    """
-    state = InputHandler()
-
-    console = tcod.Console(screen_width, screen_height)
     # Create a window based on this console and tileset.
+    console = tcod.Console(*sets.screen_size)
     with tcod.context.new_terminal(
         console.width, console.height, tileset=tileset,
     ) as context:
-        while True:  # Main loop, runs until SystemExit is raised.
+        while True: 
+            # If it exists, process user input(s).
             for event in tcod.event.get():
-                action = state.dispatch(event)
-                if action != None:
-                    cmd, val = action
-                    if cmd == 'move':
-                        dx, dy = val
-                        if not game_map.is_blocked(player.x + dx, player.y + dy):
-                            player.move(dx, dy)
+                # If the game state is over/exited, it will empty the state machine and return false.
+                if not game_state.run(event):
+                    raise SystemExit
 
-                    if cmd == 'exit':
-                        raise SystemExit
-
-            clear_all(console, entities)
-            render_all(console, entities, game_map, screen_width, screen_height, sets.colors)
-            tcod.console_flush()
-        
+            # Render a frame with a clear, draw, frame-swap operation.
+            console.clear()
+            game_state.render(console)
+            context.present(console)
+                
 if __name__ == '__main__':
     main()

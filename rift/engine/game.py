@@ -1,6 +1,6 @@
-from map_objects.game_map import GameMap
-from entity import Entity, Hero
 from enum import Enum
+from map_objects.game_map import GameMap
+from engine.entity import Entity, Hero
 
 class Game:
     def __init__(self):

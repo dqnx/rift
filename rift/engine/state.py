@@ -5,7 +5,7 @@ Implements a state machine.
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from stack import Stack
+from engine.stack import Stack
 
 class StateTransition(Enum):
     # Do nothing and continue.
@@ -22,12 +22,12 @@ class StateTransition(Enum):
 class State(ABC):
 
     @abstractmethod
-    def transition(self) -> (StateTransition, State):
+    def run(self, state_input):
         """Returns the transition and next state, if applicable"""
         pass
 
     @abstractmethod
-    def name(self) -> str:
+    def __str__(self) -> str:
         pass
 
     def on_enter(self):
@@ -44,14 +44,14 @@ class StateMachine(ABC):
         # states is a stack here, LIFO. This allows states to be "paused."
         self.states = Stack()
 
-    def transition(self) -> bool:
+    def run(self, state_input) -> bool:
         """Gets transition from current state.
 
         Closes state machine if no states remain or exit state transition.
         
         Returns boolean indicating state machine status (False=empty, True=running).
         """
-        op, new_state = self.states.top().transition()
+        op, new_state = self.states.top().run(state_input)
 
         if op == StateTransition.NONE:
             return True

@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
-from game import Direction
+from engine.game import Direction
 
 class Action(ABC):
     @abstractmethod
-    def perform(self, actor):
+    def perform(self, o: object):
         pass
 
 class WalkAction(Action):
@@ -19,4 +19,4 @@ class WalkAction(Action):
             actor.move(1,0)
         elif self.direction == Direction.WEST:
             actor.move(-1,0)
-    
+

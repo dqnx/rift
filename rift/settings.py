@@ -4,7 +4,8 @@ Defines core game settings singletons.
 """
 
 import tcod
-from singleton import singleton
+from engine.singleton import singleton
+from engine.font import PNGFont, TTFFont
 
 @singleton
 class Settings:
@@ -14,10 +15,15 @@ class Settings:
         self._screen_height = 50
         self._map_width = 80
         self._map_height = 45
+        self._tile_width = 20
+        self._tile_height = 20
 
-        self.default_font_name = 'arial10'
-        self.fonts = {
-            'arial10': 'arial10x10.png'
+        self._default_font_name = 'dejavu_mono'
+
+        self._asset_dir = "assets"
+        self._fonts = {
+            'arial_10x10': PNGFont('arial_10x10', self._asset_dir+"/arial10x10.png", 32, 8, 10, 10, tcod.tileset.CHARMAP_TCOD),
+            'dejavu_mono': TTFFont('dejavu_mono', self._asset_dir+"/DejaVuSansMono.ttf")
         }
 
         self._colors = {
@@ -29,11 +35,8 @@ class Settings:
             'default_bg': (0,0,0)
         }
 
-        self._title = "rift"
+        self._title = "RIFT"
 
-        # Run tcod init to apply settings.
-        tcod.console_init_root(self._screen_width, self._screen_height, self._title, False)
-        tcod.console_set_custom_font(self.fonts[self.default_font_name], tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
     
     @property
     def screen_size(self) -> (int, int):
@@ -58,11 +61,26 @@ class Settings:
         self._map_width = w
         self._map_height = h
     
-    def set_font(self, font_name: str):
-        if self.fonts[font_name] is None:
-            raise RuntimeWarning("set_font cannot set empty font name: " + font_name)
+    @property
+    def tile_size(self) -> (int, int):
+        """Gets game tile size as (width, height)."""
+        return (self._tile_width, self._tile_height)
+    
+    @tile_size.setter
+    def set_tile_size(self, w: int, h: int):
+        """Sets tile size as width and height."""
+        self._tile_width = w
+        self._tile_height = h
+    
 
-        tcod.console_set_custom_font(self.fonts[font_name], tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
+    def font(self, name=None):
+        if name is None:
+            return self._fonts[self._default_font_name]
+            
+        return self._fonts[name]
+
+    def set_font(self, font_name: str):
+        raise RuntimeWarning("set_font not implemented")
 
     @property
     def colors(self):
