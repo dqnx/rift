@@ -1,14 +1,15 @@
 import tcod
 import tcod.event
 
+from engine.state import StateTransition
+import engine.userinterface as ui
+
 """event
 
 Implements an event handler for user input.
 
 modified from: https://python-tcod.readthedocs.io/en/latest/tcod/event.html#tcod.event.EventDispatch
 """
-
-import tcod
 
 MOVE_KEYS = {  # key_symbol: (x, y)
     # Arrow keys.
@@ -86,23 +87,58 @@ class InputHandler(tcod.event.EventDispatch[None]):
         """The mouse has moved within the window."""
         #print(event)
 
-    def cmd_move(self, x: int, y: int) -> (int, int):
+    def cmd_move(self, x: int, y: int):
         """Intent to move: `x` and `y` is the direction, both may be 0."""
         print("Command move: " + str((x, y)))
         return ('move', (x, y))
     
-    def cmd_select(self) -> None:
+    def cmd_select(self):
         """Intent to make a selection."""
         print("Command select.")
 
-    def cmd_escape(self) -> None:
+    def cmd_escape(self):
         """Intent to exit this state."""
         print("Command escape.")
         return self.cmd_quit()
 
-    def cmd_quit(self) -> None:
+    def cmd_quit(self):
         """Intent to exit the game."""
         print("Command quit.")
         return ('exit', None)
+
+class VerticalSelectorMenu(InputHandler):
+    """Input handler for a vertical arrangement of UI Interactables."""
+    def __init__(self, element: ui.UserInterface):
+        super().__init__()
+        self._element = element
+
+    def cmd_move(self, x: int, y: int):
+        """Move ui selector around."""
+        if x == 0: 
+            active = ui.find_active(self._element)
+            if active is not None:
+                if y > 0:
+                    active.previous()
+                else:
+                    active.next()
+        return None
+
+    def cmd_select(self):
+        """Intent to make a selection."""
+        active = ui.find_active(self._element)
+        if active is not None:
+            return active.select()
+        return None
+
+    def cmd_escape(self):
+        """Intent to exit this state."""
+        print("Command escape.")
+        return self.cmd_quit()
+
+    def cmd_quit(self):
+        """Intent to exit the game."""
+        print("Command quit.")
+        return (StateTransition.EXIT, None)
+
 
 

@@ -15,8 +15,8 @@ class Settings:
         self._screen_height = 50
         self._map_width = 80
         self._map_height = 45
-        self._tile_width = 20
-        self._tile_height = 20
+        self._tile_width = 22
+        self._tile_height = 22
 
         self._default_font_name = 'dejavu_mono'
 
@@ -32,7 +32,8 @@ class Settings:
             'player': tcod.white,
             'npc': tcod.yellow,
             'default_fg': (255,255,255),
-            'default_bg': (0,0,0)
+            'default_bg': (0,0,0),
+            'highlight_fg': (102, 153, 255),
         }
 
         self._title = "RIFT"

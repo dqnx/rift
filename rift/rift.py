@@ -1,7 +1,7 @@
 import tcod
 
 from engine.gamestate import GameStateMachine
-from settings import Settings
+from engine.settings import Settings
 from mainmenu import MenuState
 
 def main():
@@ -20,17 +20,19 @@ def main():
     with tcod.context.new_terminal(
         console.width, console.height, tileset=tileset,
     ) as context:
+        console.clear()
+        context.present(console)
         while True: 
-            # If it exists, process user input(s).
-            for event in tcod.event.get():
+            # Wait for an event (animation, user input).
+            for event in tcod.event.wait():
                 # If the game state is over/exited, it will empty the state machine and return false.
                 if not game_state.run(event):
                     raise SystemExit
-
+                
             # Render a frame with a clear, draw, frame-swap operation.
             console.clear()
             game_state.render(console)
             context.present(console)
-                
+
 if __name__ == '__main__':
     main()
