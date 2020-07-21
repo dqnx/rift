@@ -134,7 +134,7 @@ def activate_next_child(ui: UserInterface):
         if isinstance(ui.children[i], Interactable):
             if ui.children[i].active:
                 # If the current child is active, toggle it and the next one
-                if i+1 > len(ui._children):
+                if i+1 < len(ui._children):
                     if isinstance(ui.children[i+1], Interactable):
                         ui.children[i].toggle()
                         ui.children[i+1].toggle()

@@ -1,3 +1,5 @@
+from enum import Enum, unique
+
 import tcod
 import tcod.event
 
@@ -89,12 +91,11 @@ class InputHandler(tcod.event.EventDispatch[None]):
 
     def cmd_move(self, x: int, y: int):
         """Intent to move: `x` and `y` is the direction, both may be 0."""
-        print("Command move: " + str((x, y)))
-        return ('move', (x, y))
+        #print("Command move: " + str((x, y)))
     
     def cmd_select(self):
         """Intent to make a selection."""
-        print("Command select.")
+        #print("Command select.")
 
     def cmd_escape(self):
         """Intent to exit this state."""
@@ -104,23 +105,39 @@ class InputHandler(tcod.event.EventDispatch[None]):
     def cmd_quit(self):
         """Intent to exit the game."""
         print("Command quit.")
-        return ('exit', None)
+        return (StateTransition.EXIT, None)
 
-class VerticalSelectorMenu(InputHandler):
-    """Input handler for a vertical arrangement of UI Interactables."""
-    def __init__(self, element: ui.UserInterface):
+@unique
+class Orientation(Enum):
+    VERTICAL = 0
+    HORIZONTAL = 1
+
+class SelectorMenu(InputHandler):
+    """Input handler for a horizontal or vertical arrangement of UI Interactables."""
+    def __init__(self, element: ui.UserInterface, orientation: Orientation):
         super().__init__()
         self._element = element
+        self._orientation = orientation
 
     def cmd_move(self, x: int, y: int):
         """Move ui selector around."""
-        if x == 0: 
-            active = ui.find_active(self._element)
-            if active is not None:
-                if y > 0:
-                    active.previous()
-                else:
-                    active.next()
+        if self._orientation is Orientation.VERTICAL:
+            if x == 0: 
+                active = ui.find_active(self._element)
+                if active is not None:
+                    if y < 0:
+                        active.previous()
+                    else:
+                        active.next()
+        elif self._orientation is Orientation.HORIZONTAL:
+            if y == 0: 
+                active = ui.find_active(self._element)
+                if active is not None:
+                    if x < 0:
+                        active.previous()
+                    else:
+                        active.next()
+
         return None
 
     def cmd_select(self):

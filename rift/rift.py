@@ -18,7 +18,7 @@ def main():
     # Create a window based on this console and tileset.
     console = tcod.Console(*sets.screen_size)
     with tcod.context.new_terminal(
-        console.width, console.height, tileset=tileset,
+        console.width, console.height, tileset=tileset#, renderer=tcod.context.RENDERER_OPENGL2
     ) as context:
         console.clear()
         context.present(console)

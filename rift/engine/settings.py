@@ -18,12 +18,14 @@ class Settings:
         self._tile_width = 22
         self._tile_height = 22
 
-        self._default_font_name = 'dejavu_mono'
+        self._default_grid_font = 'dejavu_mono'
+        self._default_text_font = 'dejavu_sans'
 
         self._asset_dir = "assets"
         self._fonts = {
             'arial_10x10': PNGFont('arial_10x10', self._asset_dir+"/arial10x10.png", 32, 8, 10, 10, tcod.tileset.CHARMAP_TCOD),
-            'dejavu_mono': TTFFont('dejavu_mono', self._asset_dir+"/DejaVuSansMono.ttf")
+            'dejavu_mono': TTFFont('dejavu_mono', self._asset_dir+"/DejaVuSansMono.ttf"),
+            'dejavu_sans': TTFFont('dejavu_sans', self._asset_dir+"/DejaVuSans.ttf")
         }
 
         self._colors = {
@@ -76,7 +78,7 @@ class Settings:
 
     def font(self, name=None):
         if name is None:
-            return self._fonts[self._default_font_name]
+            return self._fonts[self._default_grid_font]
             
         return self._fonts[name]
 

@@ -6,8 +6,9 @@ import tcod
 
 from engine.gamestate import GameState
 from engine.state import State, StateTransition
-from engine.input_handlers import VerticalSelectorMenu
+from engine.input_handlers import SelectorMenu, Orientation
 from engine.settings import Settings
+from worldgen import WorldGenState
 
 import engine.userinterface as ui
 
@@ -17,7 +18,7 @@ class MenuState(State, GameState):
 
         sets = Settings()
         self._ui = MainMenuUI(*sets.screen_size, None) # TODO: more flexible, work for all menus?
-        self._input_handler = VerticalSelectorMenu(self._ui)
+        self._input_handler = SelectorMenu(self._ui, Orientation.VERTICAL)
         self.exit = False
 
     def __str__(self):
@@ -48,17 +49,23 @@ class MainMenuUI(ui.UserInterface):
             action=_start, x=origin_x, y=origin_y+2))
         self._children[1].toggle()
 
+        # Define world gen activator
+        def _worldgen():
+            return (StateTransition.NEXT, WorldGenState())
+        self._children.append(ui.Selector("World Generation", 10, 23, self,
+            action=_worldgen, x=origin_x, y=origin_y+3))
+
         # Define options selector
         def _options():
             return (StateTransition.NONE, None)
         self._children.append(ui.Selector("Options", 10, 1, self,
-            action=_options, x=origin_x, y=origin_y+3))
+            action=_options, x=origin_x, y=origin_y+4))
 
         # Define exit selector
         def _exit():
             return (StateTransition.EXIT, None)
         self._children.append(ui.Selector("Exit", 10, 1, self,
-            action=_exit, x=origin_x, y=origin_y+4))
+            action=_exit, x=origin_x, y=origin_y+5))
 
     def _render(self, console: tcod.console.Console, offset: (int, int) = (0, 0)):
         # MainMenuUI only renders children.
