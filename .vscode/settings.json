@@ -1,4 +1,6 @@
 {
     "python.linting.enabled": true,
-    "python.pythonPath": "env/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.terminal.activateEnvironment": true,
+    "python.pythonPath": "venv\\Scripts\\python.exe"
 }

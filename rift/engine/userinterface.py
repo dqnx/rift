@@ -222,3 +222,5 @@ class Text(UserInterface):
         x, y = offset
 
         console.print(x+self._x, y+self._y, self._text, fg=self._color, bg=sets.colors['default_bg'], alignment=self._align)
+
+
