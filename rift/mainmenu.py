@@ -2,8 +2,6 @@
 
 Implements the main menu user interface, game state, and input handling methods.
 """
-import tcod
-
 from engine.gamestate import GameState
 from engine.state import State, StateTransition
 from engine.input_handlers import SelectorMenu, Orientation
@@ -67,7 +65,7 @@ class MainMenuUI(ui.UserInterface):
         self._children.append(ui.Selector("Exit", 10, 1, self,
             action=_exit, x=origin_x, y=origin_y+5))
 
-    def _render(self, console: tcod.console.Console, offset: (int, int) = (0, 0)):
+    def _render(self, offset: (int, int) = (0, 0)):
         # MainMenuUI only renders children.
         pass
 

@@ -5,8 +5,8 @@ Provides a user interface base class and specific gameplay interfaces/menus.
 
 from abc import ABC, abstractmethod
 from enum import Enum
-import tcod
 import numpy as np
+from bearlibterminal import terminal
 from engine.game import Game
 from engine.settings import Settings
 
@@ -53,18 +53,18 @@ class UserInterface(ABC):
         return (self._width, self._height)
 
     @abstractmethod
-    def _render(self, console: tcod.console.Console, offset: (int, int) = (0,0)):
+    def _render(self, offset: (int, int) = (0,0)):
         """Renders the UI object. Each subclass will define a separate render method."""
         pass
 
-    def render(self, console: tcod.console.Console, offset: (int, int) = (0,0)):
+    def render(self, offset: (int, int) = (0,0)):
         """Renders the UI object and all children. Therefore, only the top UI must be 'rendered.'"""
-        self._render(console, offset)
+        self._render(offset)
         for child in self._children:
             # add the origin of the parent as the offset of the child render.
             x, y = offset
             child_offset = (x+self._x, y+self._y)
-            child.render(console, child_offset)
+            child.render(child_offset)
 
 class Interactable(ABC):
     """Base class defining a set of UI interaction methods."""
@@ -159,37 +159,62 @@ class Highlight(Enum):
     ASTERISK = 1
     DASH = 2
 
-class Alignment(Enum):
-    CENTER = tcod.constants.CENTER
-    LEFT = tcod.constants.LEFT
-    RIGHT = tcod.constants.RIGHT
+class HorizAlignment(Enum):
+    CENTER = terminal.TK_ALIGN_CENTER
+    LEFT = terminal.TK_ALIGN_LEFT
+    RIGHT = terminal.TK_ALIGN_RIGHT
+
+class VertAlignment(Enum):
+    CENTER = terminal.TK_ALIGN_MIDDLE
+    TOP = terminal.TK_ALIGN_TOP
+    BOTTOM = terminal.TK_ALIGN_BOTTOM
 
 class Selector(UserInterface, Interactable):
     def __init__(self, text: str, width: int, height: int, parent: UserInterface, action: object,
-        x: int = 0, y: int = 0, mode: Highlight = Highlight.COLOR, align: Alignment = Alignment.LEFT):
+        x: int = 0, y: int = 0, mode: Highlight = Highlight.COLOR, 
+        horiz_align: HorizAlignment = HorizAlignment.LEFT,
+        vert_align: VertAlignment = VertAlignment.CENTER):
+
         UserInterface.__init__(self, width, height, parent, x, y)
         Interactable.__init__(self)
 
         self._text = text
         self._mode = mode
-        self._align = align.value
+        self._horiz_align = horiz_align
+        self._vert_align = vert_align
         self._action = action
 
-    def _render(self, console: tcod.console.Console, offset: (int, int) = (0, 0)):
+    def _render(self, offset: (int, int) = (0, 0)):
         """Renders the text of the selector."""
         sets = Settings()
+
+        # Position
         x, y = offset
+        x += self._x
+        y += self._y
+
+        # Text and color
+        text = self._text
+        fg = sets.colors['default_fg']
+        bg = sets.colors['default_bg']
+
+        # Active highlight
         if self.active:
             if self._mode == Highlight.INVERT:
-                console.print(x+self._x, y+self._y, self._text, fg=sets.colors['default_bg'], bg=sets.colors['default_fg'], alignment=self._align)
+                bg = sets.colors['default_fg']
+                fg = sets.colors['default_bg']
             elif self._mode == Highlight.COLOR:
-                console.print(x+self._x, y+self._y, self._text, fg=sets.colors['highlight_fg'], bg=sets.colors['default_bg'], alignment=self._align)
+                fg = sets.colors['highlight_fg']
             elif self._mode == Highlight.ASTERISK:
-                console.print(x+self._x, y+self._y, "* "+self._text, fg=sets.colors['default_fg'], bg=sets.colors['default_bg'], alignment=self._align)
+                text = "* "+text
             elif self._mode == Highlight.DASH:
-                console.print(x+self._x, y+self._y, "- "+self._text, fg=sets.colors['default_fg'], bg=sets.colors['default_bg'], alignment=self._align)
-        else:
-            console.print(x+self._x, y+self._y, self._text, fg=sets.colors['default_fg'], bg=sets.colors['default_bg'], alignment=self._align)
+                text = "- "+text
+
+        #console.print(x+self._x, y+self._y, self._text, fg=sets.colors['default_fg'], bg=sets.colors['default_bg'], alignment=self._align)
+        # BearLibTerm print
+        terminal.color(fg)
+        terminal.bkcolor(bg)
+        terminal.puts(x, y, text, *self.size, self._horiz_align.value + self._vert_align.value)
     
     def previous(self):
         """Activates the previous sibling in the sibling list."""
@@ -211,16 +236,33 @@ class Selector(UserInterface, Interactable):
         return None
 
 class Text(UserInterface):
-    def __init__(self, text: str, color: (int, int, int), width: int, height: int,  parent: UserInterface, x: int = 0, y: int = 0, align: Alignment = Alignment.LEFT):
+    def __init__(self, text: str, color: (int, int, int), width: int, height: int,  parent: UserInterface, 
+        x: int = 0, y: int = 0, 
+        horiz_align: HorizAlignment = HorizAlignment.LEFT,
+        vert_align: VertAlignment = VertAlignment.CENTER):
+
         super().__init__(width, height, parent, x=x, y=y)
         self._text = text
         self._color = color
-        self._align = align.value
+        self._horiz_align = horiz_align
+        self._vert_align = vert_align
 
-    def _render(self, console: tcod.console.Console, offset: (int, int) = (0, 0)):
+    def _render(self, offset: (int, int) = (0, 0)):
         sets = Settings()
-        x, y = offset
 
-        console.print(x+self._x, y+self._y, self._text, fg=self._color, bg=sets.colors['default_bg'], alignment=self._align)
+        # Position
+        x, y = offset
+        x += self._x
+        y += self._y
+
+        # Text and color
+        fg = sets.colors['default_fg']
+        bg = sets.colors['default_bg']
+
+        #console.print(x+self._x, y+self._y, self._text, fg=self._color, bg=sets.colors['default_bg'], alignment=self._align)
+        # BearLibTerm print
+        terminal.color(fg)
+        terminal.bkcolor(bg)
+        terminal.puts(x, y, self._text, *self.size, self._horiz_align.value + self._vert_align.value)
 
 

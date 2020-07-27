@@ -1,1 +1,4 @@
 tcod
+bearlibterminal
+pandas
+numpy

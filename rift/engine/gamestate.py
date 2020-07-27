@@ -3,7 +3,6 @@
 Implements a state machine and states for the game.
 """
 from abc import ABC, abstractmethod
-import tcod
 from engine.state import StateMachine
 
 
@@ -17,13 +16,14 @@ class GameState(ABC):
     def ui(self):
         return self._ui
 
-    def render(self, console: tcod.console.Console):
-        self.ui.render(console)
+    def render(self):
+        self.ui.render()
 
 class GameStateMachine(StateMachine):
     def __init__(self, initial_state: GameState):
         super().__init__()
         self.states.push(initial_state)
 
-    def render(self, console: tcod.console.Console):
-        self.states.top().render(console)
+    def render(self):
+        self.states.top().render()
+

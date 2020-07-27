@@ -3,9 +3,10 @@
 Defines core game settings singletons.
 """
 
-import tcod
+from bearlibterminal.terminal import color_from_argb
+
 from engine.singleton import singleton
-from engine.font import PNGFont, TTFFont
+import engine.font
 
 @singleton
 class Settings:
@@ -15,27 +16,23 @@ class Settings:
         self._screen_height = 50
         self._map_width = 80
         self._map_height = 45
-        self._tile_width = 22
-        self._tile_height = 22
+        self._tile_width = 10
+        self._tile_height = 10
 
         self._default_grid_font = 'dejavu_mono'
         self._default_text_font = 'dejavu_sans'
 
         self._asset_dir = "assets"
         self._fonts = {
-            'arial_10x10': PNGFont('arial_10x10', self._asset_dir+"/arial10x10.png", 32, 8, 10, 10, tcod.tileset.CHARMAP_TCOD),
-            'dejavu_mono': TTFFont('dejavu_mono', self._asset_dir+"/DejaVuSansMono.ttf"),
-            'dejavu_sans': TTFFont('dejavu_sans', self._asset_dir+"/DejaVuSans.ttf")
+            'arial_10x10': engine.font.Bitmap('arial_10x10', self._asset_dir+"/arial10x10.png", 10, 10, '437'),
+            'dejavu_mono': engine.font.TrueType('dejavu_mono', self._asset_dir+"/DejaVuSansMono.ttf"),
+            'dejavu_sans': engine.font.TrueType('dejavu_sans', self._asset_dir+"/DejaVuSans.ttf")
         }
 
         self._colors = {
-            'dark_wall': tcod.Color(0, 0, 100),
-            'dark_ground': tcod.Color(50, 50, 150),
-            'player': tcod.white,
-            'npc': tcod.yellow,
-            'default_fg': (255,255,255),
-            'default_bg': (0,0,0),
-            'highlight_fg': (102, 153, 255),
+            'default_fg': color_from_argb(255,255,255,255),
+            'default_bg': color_from_argb(255,0,0,0),
+            'highlight_fg': color_from_argb(255,102,153,255),
         }
 
         self._title = "RIFT"
@@ -51,7 +48,6 @@ class Settings:
         """Sets screen size as width and height."""
         self._screen_width = w
         self._screen_height = h
-        tcod.console_init_root(self._screen_width, self._screen_height, self._title, False)
 
     @property
     def map_size(self) -> (int, int):
@@ -75,7 +71,6 @@ class Settings:
         self._tile_width = w
         self._tile_height = h
     
-
     def font(self, name=None):
         if name is None:
             return self._fonts[self._default_grid_font]

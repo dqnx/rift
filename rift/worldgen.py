@@ -3,8 +3,6 @@
 Implements a world generation algorithm and visualization.
 """
 
-import tcod
-
 from engine.input_handlers import InputHandler
 from engine.settings import Settings
 from engine.gamestate import GameState
@@ -38,6 +36,6 @@ class WorldGenUI(ui.UserInterface):
         self._children.append(ui.Text("World Generation", sets.colors['default_fg'], 20, 1, self,
             x=0, y=0))
 
-    def _render(self, console: tcod.console.Console, offset: (int, int) = (0,0)):
+    def _render(self, offset: (int, int) = (0,0)):
         # WorldGen only renders children.
         pass
