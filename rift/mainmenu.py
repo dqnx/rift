@@ -50,7 +50,7 @@ class MainMenuUI(ui.UserInterface):
         # Define world gen activator
         def _worldgen():
             return (StateTransition.NEXT, WorldGenState())
-        self._children.append(ui.Selector("World Generation", 10, 23, self,
+        self._children.append(ui.Selector("World Generation", 20, 1, self,
             action=_worldgen, x=origin_x, y=origin_y+3))
 
         # Define options selector
