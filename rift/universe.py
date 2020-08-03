@@ -13,28 +13,34 @@ ECC_ANOM_ITERS = 30
 # Gravitational constant
 GM = 6.67430e-11 
 
-def _keplers_eq(e: float, M: float) -> float:
-        """Calculate eccentric anomaly from eccentricity and mean anomaly using Newton's method."""
-        E_hist = []
-        # Newtons method of En+1 = E - F(E)/F'(E)
-        def E_next(E: float) -> float:
-            n = E - e*math.sin(E) - M
-            d = 1 - e*math.cos(E)
-            return E - n/d
-        
-        # initialize E_0 with M
+def _keplers_eq(e: float, M: float, hist=False, iters=ECC_ANOM_ITERS) -> (float, list):
+    """Calculate eccentric anomaly from eccentricity and mean anomaly using Newton's method."""
+    E_hist = []
+    # Newtons method of En+1 = E - F(E)/F'(E)
+    def E_next(E: float) -> float:
+        n = E - e*math.sin(E) - M
+        d = 1.0 - e*math.cos(E)
+        return E - n/d
+    
+    # initialize E_0
+    if e > 0.8:
+        E_n = math.pi
+    else:
         E_n = M
-        for _ in range(ECC_ANOM_ITERS):
-            E_hist.append(E_n)
-            E_n = E_next(E_n)
+
+    for _ in range(iters):
+        if hist: E_hist.append(E_n) # debugging
+        E_n = E_next(E_n)
         
-        return E_n
+    if hist: E_hist.append(E_n) # debugging
+    
+    return (E_n, E_hist)
 
 class Body:
     """Body
     Stellar object base class. A stationary object in a relative position around another central object.
     All positions are in spherical coordinates."""
-    def __init__(self, name: str, mass: float, position: coord.Cartesian, parent: Body = None):
+    def __init__(self, name: str, mass: float, position: coord.Cartesian, parent = None):
         self.name = name
         self.parent = parent
         self.mass = mass
